@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle 
@@ -27,9 +26,11 @@ import {
 } from "recharts";
 import { Calendar, ChartBar, FileText, Filter, Users } from "lucide-react";
 import { ChartContainer, ChartTooltipContent, ChartTooltip } from "@/components/ui/chart";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Reports = () => {
   const [timeFilter, setTimeFilter] = useState("weekly");
+  const isMobile = useIsMobile();
 
   // Datos de muestra - En una aplicación real, estos datos vendrían de una API
   const vehicleData = [
@@ -99,22 +100,22 @@ const Reports = () => {
   ];
 
   return (
-    <section id="reports" className="py-16 bg-gray-50">
+    <section id="reports" className="py-8 md:py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl mb-4">
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 sm:text-4xl mb-2 md:mb-4">
             Panel de Informes
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
             Visualiza estadísticas detalladas sobre la operación de tu parqueadero con filtros temporales
           </p>
         </div>
 
-        <div className="flex justify-end mb-6">
+        <div className="flex justify-end mb-4 md:mb-6">
           <div className="flex items-center gap-2">
-            <Filter className="h-5 w-5 text-gray-500" />
+            <Filter className="h-4 w-4 md:h-5 md:w-5 text-gray-500" />
             <Select value={timeFilter} onValueChange={setTimeFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[140px] md:w-[180px]">
                 <SelectValue placeholder="Seleccionar filtro" />
               </SelectTrigger>
               <SelectContent>
@@ -127,28 +128,28 @@ const Reports = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid grid-cols-4 max-w-lg mx-auto">
-            <TabsTrigger value="overview" className="flex gap-1.5 items-center">
-              <ChartBar className="h-4 w-4" />
+        <Tabs defaultValue="overview" className="space-y-4 md:space-y-6">
+          <TabsList className={`grid ${isMobile ? "grid-cols-2 gap-1" : "grid-cols-4"} max-w-lg mx-auto`}>
+            <TabsTrigger value="overview" className="flex gap-1 md:gap-1.5 items-center text-xs md:text-sm">
+              <ChartBar className="h-3 w-3 md:h-4 md:w-4" />
               <span>General</span>
             </TabsTrigger>
-            <TabsTrigger value="vehicles" className="flex gap-1.5 items-center">
-              <Calendar className="h-4 w-4" />
+            <TabsTrigger value="vehicles" className="flex gap-1 md:gap-1.5 items-center text-xs md:text-sm">
+              <Calendar className="h-3 w-3 md:h-4 md:w-4" />
               <span>Vehículos</span>
             </TabsTrigger>
-            <TabsTrigger value="revenue" className="flex gap-1.5 items-center">
-              <FileText className="h-4 w-4" />
+            <TabsTrigger value="revenue" className="flex gap-1 md:gap-1.5 items-center text-xs md:text-sm">
+              <FileText className="h-3 w-3 md:h-4 md:w-4" />
               <span>Ingresos</span>
             </TabsTrigger>
-            <TabsTrigger value="clients" className="flex gap-1.5 items-center">
-              <Users className="h-4 w-4" />
+            <TabsTrigger value="clients" className="flex gap-1 md:gap-1.5 items-center text-xs md:text-sm">
+              <Users className="h-3 w-3 md:h-4 md:w-4" />
               <span>Clientes</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <TabsContent value="overview" className="space-y-4 md:space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
               <Card className="card-hover">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg">Total Vehículos</CardTitle>
@@ -194,22 +195,27 @@ const Reports = () => {
               </Card>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
               <Card className="card-hover">
                 <CardHeader>
-                  <CardTitle>Entradas vs. Salidas</CardTitle>
+                  <CardTitle className="text-base md:text-lg">Entradas vs. Salidas</CardTitle>
                 </CardHeader>
-                <CardContent className="h-[400px]">
+                <CardContent className={`${isMobile ? "h-[250px]" : "h-[400px]"} px-1 md:px-4`}>
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={vehicleData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                    <BarChart data={vehicleData} margin={{ 
+                      top: 5, 
+                      right: isMobile ? 10 : 30, 
+                      left: isMobile ? 0 : 20, 
+                      bottom: 5 
+                    }}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
+                      <XAxis dataKey="name" fontSize={isMobile ? 10 : 12} />
+                      <YAxis fontSize={isMobile ? 10 : 12} width={isMobile ? 30 : 40} />
                       <Tooltip 
                         formatter={(value, name) => [value, name === "entradas" ? "Entradas" : "Salidas"]}
                         labelFormatter={(label) => `Día: ${label}`}
                       />
-                      <Legend />
+                      <Legend wrapperStyle={isMobile ? {fontSize: "10px"} : {}} />
                       <Bar dataKey="entradas" fill="#0ea5e9" name="Entradas" />
                       <Bar dataKey="salidas" fill="#10b981" name="Salidas" />
                     </BarChart>
@@ -219,16 +225,21 @@ const Reports = () => {
               
               <Card className="card-hover">
                 <CardHeader>
-                  <CardTitle>Ingresos Diarios</CardTitle>
+                  <CardTitle className="text-base md:text-lg">Ingresos Diarios</CardTitle>
                 </CardHeader>
-                <CardContent className="h-[400px]">
+                <CardContent className={`${isMobile ? "h-[250px]" : "h-[400px]"} px-1 md:px-4`}>
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={revenueData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                    <LineChart data={revenueData} margin={{ 
+                      top: 5, 
+                      right: isMobile ? 10 : 30, 
+                      left: isMobile ? 0 : 20, 
+                      bottom: 5 
+                    }}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
+                      <XAxis dataKey="name" fontSize={isMobile ? 10 : 12} />
+                      <YAxis fontSize={isMobile ? 10 : 12} width={isMobile ? 40 : 50} />
                       <Tooltip formatter={(value) => [`$${value.toLocaleString()}`, "Ingresos"]} />
-                      <Legend />
+                      <Legend wrapperStyle={isMobile ? {fontSize: "10px"} : {}} />
                       <Line type="monotone" dataKey="ingresos" stroke="#0ea5e9" strokeWidth={2} name="Ingresos" />
                     </LineChart>
                   </ResponsiveContainer>
@@ -238,28 +249,28 @@ const Reports = () => {
             
             <Card>
               <CardHeader>
-                <CardTitle>Datos Detallados</CardTitle>
+                <CardTitle className="text-base md:text-lg">Datos Detallados</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="overflow-x-auto">
                 <Table>
                   <TableCaption>Datos de los últimos 5 días</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Fecha</TableHead>
-                      <TableHead>Entradas</TableHead>
-                      <TableHead>Salidas</TableHead>
-                      <TableHead>Ingresos</TableHead>
-                      <TableHead>Tiempo Promedio</TableHead>
+                      <TableHead className="text-xs md:text-sm">Fecha</TableHead>
+                      <TableHead className="text-xs md:text-sm">Entradas</TableHead>
+                      <TableHead className="text-xs md:text-sm">Salidas</TableHead>
+                      <TableHead className="text-xs md:text-sm">Ingresos</TableHead>
+                      <TableHead className="text-xs md:text-sm">Tiempo Promedio</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {TABLE_DATA.map((row, i) => (
                       <TableRow key={i}>
-                        <TableCell>{row.fecha}</TableCell>
-                        <TableCell>{row.entradas}</TableCell>
-                        <TableCell>{row.salidas}</TableCell>
-                        <TableCell>{row.ingresos}</TableCell>
-                        <TableCell>{row.tiempoPromedio}</TableCell>
+                        <TableCell className="text-xs md:text-sm">{row.fecha}</TableCell>
+                        <TableCell className="text-xs md:text-sm">{row.entradas}</TableCell>
+                        <TableCell className="text-xs md:text-sm">{row.salidas}</TableCell>
+                        <TableCell className="text-xs md:text-sm">{row.ingresos}</TableCell>
+                        <TableCell className="text-xs md:text-sm">{row.tiempoPromedio}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -268,23 +279,28 @@ const Reports = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="vehicles" className="space-y-6">
+          <TabsContent value="vehicles" className="space-y-4 md:space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Flujo de Vehículos</CardTitle>
-                <CardDescription>Entradas y salidas en el periodo seleccionado</CardDescription>
+                <CardTitle className="text-base md:text-lg">Flujo de Vehículos</CardTitle>
+                <CardDescription className="text-xs md:text-sm">Entradas y salidas en el periodo seleccionado</CardDescription>
               </CardHeader>
-              <CardContent className="h-[500px]">
+              <CardContent className={`${isMobile ? "h-[300px]" : "h-[500px]"} px-1 md:px-4`}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={vehicleData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <BarChart data={vehicleData} margin={{ 
+                    top: 5, 
+                    right: isMobile ? 10 : 30, 
+                    left: isMobile ? 0 : 20, 
+                    bottom: 5 
+                  }}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
+                    <XAxis dataKey="name" fontSize={isMobile ? 10 : 12} />
+                    <YAxis fontSize={isMobile ? 10 : 12} width={isMobile ? 30 : 40} />
                     <Tooltip 
                       formatter={(value, name) => [value, name === "entradas" ? "Entradas" : "Salidas"]}
                       labelFormatter={(label) => `Día: ${label}`}
                     />
-                    <Legend />
+                    <Legend wrapperStyle={isMobile ? {fontSize: "10px"} : {}} />
                     <Bar dataKey="entradas" fill="#0ea5e9" name="Entradas" />
                     <Bar dataKey="salidas" fill="#10b981" name="Salidas" />
                   </BarChart>
@@ -293,20 +309,25 @@ const Reports = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="revenue" className="space-y-6">
+          <TabsContent value="revenue" className="space-y-4 md:space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Ingresos</CardTitle>
-                <CardDescription>Ingresos en el periodo seleccionado</CardDescription>
+                <CardTitle className="text-base md:text-lg">Ingresos</CardTitle>
+                <CardDescription className="text-xs md:text-sm">Ingresos en el periodo seleccionado</CardDescription>
               </CardHeader>
-              <CardContent className="h-[500px]">
+              <CardContent className={`${isMobile ? "h-[300px]" : "h-[500px]"} px-1 md:px-4`}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={revenueData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <LineChart data={revenueData} margin={{ 
+                    top: 5, 
+                    right: isMobile ? 10 : 30, 
+                    left: isMobile ? 0 : 20, 
+                    bottom: 5 
+                  }}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
+                    <XAxis dataKey="name" fontSize={isMobile ? 10 : 12} />
+                    <YAxis fontSize={isMobile ? 10 : 12} width={isMobile ? 40 : 50} />
                     <Tooltip formatter={(value) => [`$${value.toLocaleString()}`, "Ingresos"]} />
-                    <Legend />
+                    <Legend wrapperStyle={isMobile ? {fontSize: "10px"} : {}} />
                     <Line type="monotone" dataKey="ingresos" stroke="#0ea5e9" strokeWidth={2} name="Ingresos" />
                   </LineChart>
                 </ResponsiveContainer>
@@ -314,22 +335,30 @@ const Reports = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="clients" className="space-y-6">
+          <TabsContent value="clients" className="space-y-4 md:space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Tipos de Clientes</CardTitle>
-                <CardDescription>Distribución por tipo de cliente</CardDescription>
+                <CardTitle className="text-base md:text-lg">Tipos de Clientes</CardTitle>
+                <CardDescription className="text-xs md:text-sm">Distribución por tipo de cliente</CardDescription>
               </CardHeader>
-              <CardContent className="h-[500px]">
+              <CardContent className={`${isMobile ? "h-[300px]" : "h-[500px]"} px-1 md:px-4`}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <PieChart margin={{ 
+                    top: 5, 
+                    right: isMobile ? 10 : 30, 
+                    left: isMobile ? 0 : 20, 
+                    bottom: 5 
+                  }}>
                     <Pie
                       data={clientTypeData}
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={150}
+                      label={({ name, percent }) => isMobile ? 
+                        `${(percent * 100).toFixed(0)}%` : 
+                        `${name}: ${(percent * 100).toFixed(0)}%`
+                      }
+                      outerRadius={isMobile ? 80 : 150}
                       fill="#8884d8"
                       dataKey="value"
                     >
@@ -338,7 +367,7 @@ const Reports = () => {
                       ))}
                     </Pie>
                     <Tooltip formatter={(value) => [`${value}%`, "Porcentaje"]} />
-                    <Legend />
+                    <Legend wrapperStyle={isMobile ? {fontSize: "10px"} : {}} />
                   </PieChart>
                 </ResponsiveContainer>
               </CardContent>
