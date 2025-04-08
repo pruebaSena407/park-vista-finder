@@ -199,18 +199,21 @@ const Reports = () => {
                 <CardHeader>
                   <CardTitle>Entradas vs. Salidas</CardTitle>
                 </CardHeader>
-                <CardContent className="h-80">
-                  <ChartContainer config={{ entradas: { label: "Entradas", theme: { light: "#0ea5e9", dark: "#38bdf8" } }, salidas: { label: "Salidas", theme: { light: "#16b79c", dark: "#4ade80" } } }}>
-                    <BarChart data={vehicleData}>
+                <CardContent className="h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={vehicleData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
                       <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Tooltip 
+                        formatter={(value, name) => [value, name === "entradas" ? "Entradas" : "Salidas"]}
+                        labelFormatter={(label) => `Día: ${label}`}
+                      />
                       <Legend />
-                      <Bar dataKey="entradas" fill="var(--color-entradas, #0ea5e9)" />
-                      <Bar dataKey="salidas" fill="var(--color-salidas, #16b79c)" />
+                      <Bar dataKey="entradas" fill="#0ea5e9" name="Entradas" />
+                      <Bar dataKey="salidas" fill="#10b981" name="Salidas" />
                     </BarChart>
-                  </ChartContainer>
+                  </ResponsiveContainer>
                 </CardContent>
               </Card>
               
@@ -218,17 +221,17 @@ const Reports = () => {
                 <CardHeader>
                   <CardTitle>Ingresos Diarios</CardTitle>
                 </CardHeader>
-                <CardContent className="h-80">
-                  <ChartContainer config={{ ingresos: { label: "Ingresos", theme: { light: "#0ea5e9", dark: "#38bdf8" } } }}>
-                    <LineChart data={revenueData}>
+                <CardContent className="h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={revenueData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
                       <YAxis />
-                      <ChartTooltip formatter={(value) => [`$${value.toLocaleString()}`, "Ingresos"]} />
+                      <Tooltip formatter={(value) => [`$${value.toLocaleString()}`, "Ingresos"]} />
                       <Legend />
-                      <Line type="monotone" dataKey="ingresos" stroke="var(--color-ingresos, #0ea5e9)" strokeWidth={2} />
+                      <Line type="monotone" dataKey="ingresos" stroke="#0ea5e9" strokeWidth={2} name="Ingresos" />
                     </LineChart>
-                  </ChartContainer>
+                  </ResponsiveContainer>
                 </CardContent>
               </Card>
             </div>
@@ -271,18 +274,21 @@ const Reports = () => {
                 <CardTitle>Flujo de Vehículos</CardTitle>
                 <CardDescription>Entradas y salidas en el periodo seleccionado</CardDescription>
               </CardHeader>
-              <CardContent className="h-96">
-                <ChartContainer config={{ entradas: { label: "Entradas", theme: { light: "#0ea5e9", dark: "#38bdf8" } }, salidas: { label: "Salidas", theme: { light: "#16b79c", dark: "#4ade80" } } }}>
-                  <BarChart data={vehicleData}>
+              <CardContent className="h-[500px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={vehicleData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
-                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Tooltip 
+                      formatter={(value, name) => [value, name === "entradas" ? "Entradas" : "Salidas"]}
+                      labelFormatter={(label) => `Día: ${label}`}
+                    />
                     <Legend />
-                    <Bar dataKey="entradas" fill="var(--color-entradas, #0ea5e9)" />
-                    <Bar dataKey="salidas" fill="var(--color-salidas, #16b79c)" />
+                    <Bar dataKey="entradas" fill="#0ea5e9" name="Entradas" />
+                    <Bar dataKey="salidas" fill="#10b981" name="Salidas" />
                   </BarChart>
-                </ChartContainer>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
           </TabsContent>
@@ -293,17 +299,17 @@ const Reports = () => {
                 <CardTitle>Ingresos</CardTitle>
                 <CardDescription>Ingresos en el periodo seleccionado</CardDescription>
               </CardHeader>
-              <CardContent className="h-96">
-                <ChartContainer config={{ ingresos: { label: "Ingresos", theme: { light: "#0ea5e9", dark: "#38bdf8" } } }}>
-                  <LineChart data={revenueData}>
+              <CardContent className="h-[500px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={revenueData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
-                    <ChartTooltip formatter={(value) => [`$${value.toLocaleString()}`, "Ingresos"]} />
+                    <Tooltip formatter={(value) => [`$${value.toLocaleString()}`, "Ingresos"]} />
                     <Legend />
-                    <Line type="monotone" dataKey="ingresos" stroke="var(--color-ingresos, #0ea5e9)" strokeWidth={2} />
+                    <Line type="monotone" dataKey="ingresos" stroke="#0ea5e9" strokeWidth={2} name="Ingresos" />
                   </LineChart>
-                </ChartContainer>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
           </TabsContent>
@@ -314,9 +320,9 @@ const Reports = () => {
                 <CardTitle>Tipos de Clientes</CardTitle>
                 <CardDescription>Distribución por tipo de cliente</CardDescription>
               </CardHeader>
-              <CardContent className="h-96">
+              <CardContent className="h-[500px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
+                  <PieChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <Pie
                       data={clientTypeData}
                       cx="50%"
