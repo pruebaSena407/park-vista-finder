@@ -14,11 +14,14 @@ import { Plus, Edit, Trash2, Clock } from "lucide-react";
 import { ParkingRateForm } from "./ParkingRateForm";
 import { useToast } from "@/hooks/use-toast";
 
-// Mock data for rates
+// Properly type the vehicleType
+type VehicleType = "car" | "motorcycle" | "bicycle" | "truck";
+
+// Mock data for rates with proper typing
 const initialRates = [
-  { id: 1, name: "Tarifa Estándar", hourlyRate: 5000, dailyRate: 25000, vehicleType: "car" },
-  { id: 2, name: "Tarifa Motocicleta", hourlyRate: 3000, dailyRate: 15000, vehicleType: "motorcycle" },
-  { id: 3, name: "Tarifa Premium", hourlyRate: 8000, dailyRate: 40000, vehicleType: "car" },
+  { id: 1, name: "Tarifa Estándar", hourlyRate: 5000, dailyRate: 25000, vehicleType: "car" as VehicleType },
+  { id: 2, name: "Tarifa Motocicleta", hourlyRate: 3000, dailyRate: 15000, vehicleType: "motorcycle" as VehicleType },
+  { id: 3, name: "Tarifa Premium", hourlyRate: 8000, dailyRate: 40000, vehicleType: "car" as VehicleType },
 ];
 
 export type ParkingRate = {
@@ -26,7 +29,7 @@ export type ParkingRate = {
   name: string;
   hourlyRate: number;
   dailyRate: number;
-  vehicleType: "car" | "motorcycle" | "bicycle" | "truck";
+  vehicleType: VehicleType;
 };
 
 export function ParkingRatesPanel() {
@@ -91,14 +94,14 @@ export function ParkingRatesPanel() {
     }).format(amount);
   };
 
-  const getVehicleTypeLabel = (type: string) => {
-    const types: Record<string, string> = {
+  const getVehicleTypeLabel = (type: VehicleType) => {
+    const types: Record<VehicleType, string> = {
       car: "Automóvil",
       motorcycle: "Motocicleta",
       bicycle: "Bicicleta",
       truck: "Camión"
     };
-    return types[type] || type;
+    return types[type];
   };
 
   return (

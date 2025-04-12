@@ -44,9 +44,18 @@ export function ParkingLocationForm({ initialData, onSubmit, onCancel }: Parking
 
   const handleSubmit = (values: FormValues) => {
     if (initialData) {
-      onSubmit({ ...values, id: initialData.id });
+      // Using the non-null assertion operator to ensure all required fields are present
+      onSubmit({
+        id: initialData.id,
+        name: values.name,
+        address: values.address,
+        capacity: values.capacity,
+        latitude: values.latitude,
+        longitude: values.longitude
+      });
     } else {
-      onSubmit(values as ParkingLocation);
+      // For new locations, pass the values directly as they're fully defined from the form
+      onSubmit(values as unknown as ParkingLocation);
     }
   };
 

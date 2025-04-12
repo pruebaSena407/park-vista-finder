@@ -49,9 +49,16 @@ export function ParkingRateForm({ initialData, onSubmit, onCancel }: ParkingRate
 
   const handleSubmit = (values: FormValues) => {
     if (initialData) {
-      onSubmit({ ...values, id: initialData.id });
+      onSubmit({
+        id: initialData.id,
+        name: values.name,
+        hourlyRate: values.hourlyRate,
+        dailyRate: values.dailyRate,
+        vehicleType: values.vehicleType
+      });
     } else {
-      onSubmit(values as ParkingRate);
+      // For new rates, pass the values directly
+      onSubmit(values as unknown as ParkingRate);
     }
   };
 
