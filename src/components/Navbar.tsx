@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Car, Menu, X, BarChart3 } from "lucide-react";
+import { Car, Menu, X, BarChart3, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -34,6 +34,10 @@ const Navbar = () => {
             <Link to="/reports" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
               <BarChart3 className="mr-1 h-4 w-4" />
               Informes
+            </Link>
+            <Link to="/admin" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
+              <Settings className="mr-1 h-4 w-4" />
+              Administración
             </Link>
             <Link to="/#contact" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
               Contacto
@@ -91,6 +95,16 @@ const Navbar = () => {
               <div className="flex items-center">
                 <BarChart3 className="mr-1 h-4 w-4" />
                 Informes
+              </div>
+            </Link>
+            <Link 
+              to="/admin" 
+              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <div className="flex items-center">
+                <Settings className="mr-1 h-4 w-4" />
+                Administración
               </div>
             </Link>
             <Link 
