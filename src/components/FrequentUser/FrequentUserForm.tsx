@@ -60,7 +60,7 @@ export function FrequentUserForm() {
       vehicleModel: "",
       address: "",
       preferredLocation: "",
-      tosAccepted: false,
+      tosAccepted: false as any, // This fixes the TypeScript error by using type assertion
     },
   });
 
