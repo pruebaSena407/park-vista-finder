@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { 
   MapPin, 
   Navigation, 
@@ -16,6 +17,7 @@ import {
 const LocationMap = () => {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [expandedLocation, setExpandedLocation] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   const locations = [
     {
@@ -82,7 +84,7 @@ const LocationMap = () => {
         </div>
 
         <div className="mt-16 grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-1 space-y-4">
+          <div className={`${isMobile ? 'order-2' : 'lg:col-span-1'} space-y-4`}>
             {locations.map((location) => (
               <Card 
                 key={location.id} 
@@ -163,29 +165,31 @@ const LocationMap = () => {
             ))}
           </div>
           
-          <div className="lg:col-span-2">
-            <div className="relative w-full h-[400px] lg:h-full rounded-lg overflow-hidden bg-gray-200">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center p-8 bg-white/80 backdrop-blur-sm rounded-lg shadow-sm">
-                  <MapPin className="h-8 w-8 text-primary mx-auto mb-3" />
-                  <p className="font-medium text-gray-900">
-                    Mapa Interactivo
-                  </p>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Conectando a la API de mapas...
-                  </p>
-                </div>
-              </div>
-              {/* This would be replaced with an actual map integration */}
+          <div className={`${isMobile ? 'order-1 mb-8' : 'lg:col-span-2'}`}>
+            <div className="relative w-full h-[300px] md:h-[400px] lg:h-full rounded-lg overflow-hidden bg-gray-200">
+              {/* Replace placeholder with actual map image */}
               <img 
-                src={
-                  selectedLocation 
-                    ? locations.find(l => l.id === selectedLocation)?.image
-                    : "https://images.unsplash.com/photo-1486480128099-b7f7fdf8294b?w=800&auto=format&fit=crop&q=60"
-                } 
-                alt="Mapa de ubicación" 
+                src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=800&auto=format&fit=crop&q=60"
+                alt="Mapa de ubicaciones" 
                 className="w-full h-full object-cover"
               />
+              
+              {/* Overlay with location marker for selected location */}
+              <div className="absolute inset-0">
+                {selectedLocation && (
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="animate-pulse">
+                      <MapPin className="h-12 w-12 text-primary drop-shadow-lg" />
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Map title overlay */}
+              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm">
+                <h3 className="font-bold text-gray-800">Mapa de Ubicaciones</h3>
+                <p className="text-xs text-gray-600">Selecciona un parqueadero para ver detalles</p>
+              </div>
             </div>
           </div>
         </div>
