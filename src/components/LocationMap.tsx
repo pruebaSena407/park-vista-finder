@@ -167,10 +167,10 @@ const LocationMap = () => {
           
           <div className={`${isMobile ? 'order-1 mb-8' : 'lg:col-span-2'}`}>
             <div className="relative w-full h-[300px] md:h-[400px] lg:h-full rounded-lg overflow-hidden bg-gray-200">
-              {/* Using a map image of Bogotá, Colombia */}
+              {/* Replace placeholder with actual map image */}
               <img 
-                src="https://images.unsplash.com/photo-1564055104754-e15978bd29fc?w=800&auto=format&fit=crop&q=60"
-                alt="Mapa de Bogotá, Colombia" 
+                src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=800&auto=format&fit=crop&q=60"
+                alt="Mapa de ubicaciones" 
                 className="w-full h-full object-cover"
               />
               
@@ -187,7 +187,7 @@ const LocationMap = () => {
               
               {/* Map title overlay */}
               <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm">
-                <h3 className="font-bold text-gray-800">Bogotá, Colombia</h3>
+                <h3 className="font-bold text-gray-800">Mapa de Ubicaciones</h3>
                 <p className="text-xs text-gray-600">Selecciona un parqueadero para ver detalles</p>
               </div>
             </div>
