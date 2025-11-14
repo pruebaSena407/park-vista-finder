@@ -1,18 +1,19 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Car, Menu, X, BarChart3, Settings } from "lucide-react";
+import { Car, Menu, X, BarChart3, Settings, LogOut, User } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, userRole, signOut } = useAuth();
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link to="/">
+            <Link to={user ? "/dashboard" : "/"}>
               <div className="flex items-center">
                 <Car className="h-8 w-8 text-primary" />
                 <span className="ml-2 text-xl font-bold text-gray-800">ParkVista</span>
@@ -22,35 +23,78 @@ const Navbar = () => {
 
           {/* Desktop navigation */}
           <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-            <Link to="/#features" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
-              Características
-            </Link>
-            <Link to="/#tariffs" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
-              Tarifas
-            </Link>
-            <Link to="/#locations" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
-              Ubicaciones
-            </Link>
-            <Link to="/reports" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
-              <BarChart3 className="mr-1 h-4 w-4" />
-              Informes
-            </Link>
-            <Link to="/admin" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
-              <Settings className="mr-1 h-4 w-4" />
-              Administración
-            </Link>
-            <Link to="/#contact" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
-              Contacto
-            </Link>
+            {!user && (
+              <>
+                <Link to="/#features" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
+                  Características
+                </Link>
+                <Link to="/#tariffs" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
+                  Tarifas
+                </Link>
+                <Link to="/#locations" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
+                  Ubicaciones
+                </Link>
+                <Link to="/#contact" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
+                  Contacto
+                </Link>
+              </>
+            )}
+            
+            {user && (
+              <>
+                <Link to="/dashboard" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
+                  Dashboard
+                </Link>
+                {userRole === "cliente" && (
+                  <>
+                    <Link to="/payments" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
+                      Pagos
+                    </Link>
+                    <Link to="/register" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
+                      Mi Cuenta
+                    </Link>
+                  </>
+                )}
+                {(userRole === "empleado" || userRole === "admin") && (
+                  <>
+                    <Link to="/reports" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
+                      <BarChart3 className="mr-1 h-4 w-4" />
+                      Informes
+                    </Link>
+                    {userRole === "admin" && (
+                      <Link to="/admin" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary">
+                        <Settings className="mr-1 h-4 w-4" />
+                        Administración
+                      </Link>
+                    )}
+                  </>
+                )}
+              </>
+            )}
           </div>
 
           <div className="hidden sm:flex items-center">
-            <Link to="/#login">
-              <Button variant="outline" className="mr-2">Iniciar Sesión</Button>
-            </Link>
-            <Link to="/#login">
-              <Button>Registrarse</Button>
-            </Link>
+            {!user ? (
+              <>
+                <Link to="/auth">
+                  <Button variant="outline" className="mr-2">Iniciar Sesión</Button>
+                </Link>
+                <Link to="/auth">
+                  <Button>Registrarse</Button>
+                </Link>
+              </>
+            ) : (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+                  <User className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium capitalize">{userRole || "Usuario"}</span>
+                </div>
+                <Button variant="outline" size="sm" onClick={signOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Cerrar Sesión
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -66,62 +110,125 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="sm:hidden">
           <div className="pt-2 pb-3 space-y-1">
-            <Link 
-              to="/#features" 
-              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Características
-            </Link>
-            <Link 
-              to="/#tariffs" 
-              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Tarifas
-            </Link>
-            <Link 
-              to="/#locations" 
-              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Ubicaciones
-            </Link>
-            <Link 
-              to="/reports" 
-              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <div className="flex items-center">
-                <BarChart3 className="mr-1 h-4 w-4" />
-                Informes
-              </div>
-            </Link>
-            <Link 
-              to="/admin" 
-              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <div className="flex items-center">
-                <Settings className="mr-1 h-4 w-4" />
-                Administración
-              </div>
-            </Link>
-            <Link 
-              to="/#contact" 
-              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Contacto
-            </Link>
-            <div className="mt-4 flex flex-col space-y-2 px-3">
-              <Link to="/#login" onClick={() => setIsMenuOpen(false)}>
-                <Button variant="outline" className="w-full">Iniciar Sesión</Button>
-              </Link>
-              <Link to="/#login" onClick={() => setIsMenuOpen(false)}>
-                <Button className="w-full">Registrarse</Button>
-              </Link>
-            </div>
+            {!user ? (
+              <>
+                <Link 
+                  to="/#features" 
+                  className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Características
+                </Link>
+                <Link 
+                  to="/#tariffs" 
+                  className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Tarifas
+                </Link>
+                <Link 
+                  to="/#locations" 
+                  className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Ubicaciones
+                </Link>
+                <Link 
+                  to="/#contact" 
+                  className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Contacto
+                </Link>
+                <div className="border-t mt-2 pt-2">
+                  <Link 
+                    to="/auth" 
+                    className="block pl-3 pr-4 py-2 text-base font-medium text-primary hover:bg-gray-50"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Iniciar Sesión
+                  </Link>
+                  <Link 
+                    to="/auth" 
+                    className="block pl-3 pr-4 py-2 text-base font-medium text-primary hover:bg-gray-50"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Registrarse
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <Link 
+                  to="/dashboard" 
+                  className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+                {userRole === "cliente" && (
+                  <>
+                    <Link 
+                      to="/payments" 
+                      className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Pagos
+                    </Link>
+                    <Link 
+                      to="/register" 
+                      className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Mi Cuenta
+                    </Link>
+                  </>
+                )}
+                {(userRole === "empleado" || userRole === "admin") && (
+                  <>
+                    <Link 
+                      to="/reports" 
+                      className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <div className="flex items-center">
+                        <BarChart3 className="mr-2 h-4 w-4" />
+                        Informes
+                      </div>
+                    </Link>
+                    {userRole === "admin" && (
+                      <Link 
+                        to="/admin" 
+                        className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <div className="flex items-center">
+                          <Settings className="mr-2 h-4 w-4" />
+                          Administración
+                        </div>
+                      </Link>
+                    )}
+                  </>
+                )}
+                <div className="border-t mt-2 pt-2">
+                  <div className="pl-3 pr-4 py-2 text-sm text-muted-foreground">
+                    Rol: <span className="capitalize font-medium text-foreground">{userRole || "Usuario"}</span>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      signOut();
+                    }}
+                    className="w-full text-left pl-3 pr-4 py-2 text-base font-medium text-red-600 hover:bg-gray-50"
+                  >
+                    <div className="flex items-center">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Cerrar Sesión
+                    </div>
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
